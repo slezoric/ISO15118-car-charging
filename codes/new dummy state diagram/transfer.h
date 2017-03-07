@@ -21,6 +21,6 @@
 #define TRANSFER_H_
 
 char *sendd(int sockfd , char data[]);
-char *receivee(int sockfd);
+unsigned char receivee(int client_fd,unsigned char *code, unsigned int *value);
 
 #endif /* TRANSFER_H_*/

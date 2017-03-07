@@ -13,22 +13,10 @@
 * Modified by		: Jiztom  
 * Modified on		:17.02.2017
 */
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <errno.h>
-#include <string.h>
-#include <netdb.h>
-#include <time.h>
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <arpa/inet.h>
-#include "transfer.h"
 
-#define PORT 3490
-#define BACKLOG 10
 
+///////global variable //////////////////////////////////////
+int state = 0;
 
 long timespec_diff(struct timespec a, struct timespec b)
 {
@@ -53,10 +41,15 @@ int main()
     char buff2[100];
 //  memset(buffer,0,sizeof(buffer));
     int yes =1;
-    char nivas[1024] = "hello world";
-unsigned char code;
-unsigned int value;
+  
+    unsigned char code;
+    unsigned int value;
 
+/////////////variables for inner loop////////////
+	int language;
+	int condition = 0;
+	int detect = 0;
+	int lock-condition = 0;
 
     if ((socket_fd = socket(AF_INET, SOCK_STREAM, 0))== -1) {
         fprintf(stderr, "Socket failure!!\n");
@@ -100,33 +93,129 @@ unsigned int value;
 
         while(1) 
         {
-			buff = receivee(client_fd,&code,&value); // -----> the calling function
-			//num=recv(client_fd,buff,100,MSG_DONTWAIT); // -------> directly recieving data
-	
-			if (num>0)
+			if(condition == 0) ////language selection/////
 			{
-				sprintf(buff2,"Why are you sendig me %s", buff);
-                clock_gettime(CLOCK_MONOTONIC_RAW, &start); 
-                sendd(client_fd , buff2); //-----> the signal being send
+				printf(" Please choose the language to be selected");
+				printf(" \n 1. English \t 2. German \n");
+				printf(" your option please : \n"); 
+				scanf("%d", & language );
+				printf("\n");
+				/////----->>>>> send signal to the EB guide for language selection
+				condtion++;
 			}
-            clock_gettime(CLOCK_MONOTONIC_RAW, &end); 
-			t_diff = timespec_diff(end, start);
-			printf("Difference %d\n",t_diff);
-			if (t_diff % 5==0)
-            {
-				sprintf(buff2,"You fool forgot to send something");
-                sendd(client_fd , buff2); //-----> the signal being send
-            } 
-            fprintf(stdout,"Running....\n");
-		
-        } //End of Inner While...
+			if(condition == 1)////// plug detection and intialization////// 
+			{
+				printf(" \n please insert the plug into the system \n");
+				init_statemachine();
+				detect = fire_event(CABLE_DETECTED , 0);
+				if( detect == 1)
+				{
+					printf("\n the cable has been connected and the car has been detected");
+					///////the signal from the EVSE for the lock status ////////					
+					// receiveee ();
+					if(fire_event( CABLE_LOCK , signal) == 1)
+					{
+						condititon++;
+					}
+					else
+					{
+						init_statemachine();
+						condition = 1;
+					}
+				}
+				else
+					printf(" \n the cable has not been detected continue loop" );
+			}
+			if(condtion == 2)
+			{
+				printf("\n the vehicle status is :");
+				/////signal for the protocol detected////////////
+				// receivee
+				if (/* ISO 15118*/)
+				{
+				printf("\n the ISO 15118 was detected and proceeding to next state \n");
+				fire_event(PROTOCOL_DETECT , ISO15118_DETECTED);
+				condition = 3;
+				}
+				else if(/* IEC 61851*/ )
+				{
+					printf("\nthe IEC 61851 was detected\n"):
+					fire_event(PROTOCOL_DETECT, IEC61851_DETECTED);
+					////condition = //////////////// ;
+				}
+				else if(/* Manual charging*/)
+				{
+					printf("\n no protocol detected will need to move towards manual charging\n");
+					fire_event(PROTOCOL_DETECT, MANUAL_CHARGING);					
+					//////condition = //////////
+				}
+				else /// is this even required?
+				{
+					printf ("\n error in detection. Lost communication\n resetting connection \n");
+					init_statemachine();
+					condition =0;
+				}
+			}
+			
+			if(condition == 3)
+			{
+				printf("\n the protocol has been detected . Now initiating the information and account details process\n"); 
+				fire_event(REGISTER , 0);
+				printf("\n the payment and the initial requirement has been done\n");
+				fire_event(AUTHORIZATION , 0);
+				condition++;
+			}
+			
+			if( condition == 4)
+			{
+				printf(" \n the car is ready for charging.\n\n please press the button to charge the vehicle\n");
+				fire_event(START_CHARGE,0);
+				do
+				{
+					fire_event(CHARGING_STATUS , 0);
+					
+				}while((fire_event(FULL_CHARGE,0)|| fire_event(MANUAL_STOP,0)) == 1);
+				printf("the car has stopped charging");
+				printf("the payment details are as follows:");
+				fire_event(METER_RECEIPT , 0);
+				condition++;
+			}
+			
+			if(condition == 5)
+			{
+				printf("The payment will be processed now");
+				///////try the payment using the details logged before////
+				if ( fire_event(INITIATE_PAYMENT , 0 ) == 1)
+				{
+					printf(" the payment was sucessful");
+					fire_event(PAYMENT_SUCESSFUL , 0);
+					condition++;
+				}
+				else 
+				{
+					printf(" the payment was unsucessful\n");
+					fire_event(PAYMENT_UNSUCESSFUL,0);
+					condition = ;////special error case
+				}
+			}
+			
+			if (condition == 6)
+			{
+				printf(" the cable will be unlocked now ");
+				fire_event(CABLE_UN_LOCK , 0);
+				condition = 0;
+				printf(" the charging process has been completed \n Thankyou please use me again");
+			}
+		} //End of Inner While...
         //Close Connection Socket
         close(client_fd);
     } //Outer While
 
     close(socket_fd);
     return 0;
-} //End of main
+}
+
+//End of main
 
 
-unsigned char receivee(client_fd,unsigned char *code, unsigned int *value)
+//unsigned char receivee(int client_fd,unsigned char *code, unsigned int *value);

@@ -64,7 +64,7 @@ void fire_event ( int event, int param)
 			{
 				case CABLE_DETECTED:
 					printf("the car has been detected ");
-					event = CABLE_LOCK;
+					//event = CABLE_LOCK;
 					break;
 						
 				case CABLE_LOCK:
@@ -72,6 +72,7 @@ void fire_event ( int event, int param)
 					{
 						printf("the cable has been locked");
 						event = PROTOCOL_DETECT;
+						
 					}
 					else
 					{
@@ -89,11 +90,11 @@ void fire_event ( int event, int param)
 					}
 					else if ( param == IEC61851_DETECTED)
 					{
-						event = SEMI_ISO15118;
+						state = SEMI_ISO15118;
 					}
 					else if ( param == NO_PROTOCOL_DETECTED)
 					{
-						event = MANUAL_CHARGING;
+						state = MANUAL_CHARGING;
 					}
 					break;
 			
@@ -128,6 +129,7 @@ void fire_event ( int event, int param)
 					break;
 				
 				case CHARGING_STATUS:
+					
 				
 				case FULL_CHARGE:
 				
