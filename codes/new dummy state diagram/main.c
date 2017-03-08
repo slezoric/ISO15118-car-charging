@@ -3,7 +3,7 @@
  * 
  * 	Author 		: Jiztom Franics K	
  * 	Created on	: 01.03.2017 
- *  Modified on	: 01.03.2017
+ *  Modified on	: 08.03.2017
  */
 
 /*
@@ -50,7 +50,8 @@ int main()
 	int condition = 0;
 	int detect = 0;
 	int lock-condition = 0;
-
+	int signal = 0;
+	
     if ((socket_fd = socket(AF_INET, SOCK_STREAM, 0))== -1) {
         fprintf(stderr, "Socket failure!!\n");
         exit(1);
@@ -112,7 +113,7 @@ int main()
 				{
 					printf("\n the cable has been connected and the car has been detected");
 					///////the signal from the EVSE for the lock status ////////					
-					// receiveee ();
+					signal = receiveee (sockfd , &code, &value);
 					if(fire_event( CABLE_LOCK , signal) == 1)
 					{
 						condititon++;
@@ -129,21 +130,21 @@ int main()
 			if(condtion == 2)
 			{
 				printf("\n the vehicle status is :");
-				/////signal for the protocol detected////////////
-				// receivee
-				if (/* ISO 15118*/)
+				signal =0;/////signal for the protocol detected////////////
+				signal = receivee(sockfd , &code, &value);
+				if (signal == ISO_15118*/)
 				{
 				printf("\n the ISO 15118 was detected and proceeding to next state \n");
 				fire_event(PROTOCOL_DETECT , ISO15118_DETECTED);
 				condition = 3;
 				}
-				else if(/* IEC 61851*/ )
+				else if(signal == IEC_61851 )
 				{
 					printf("\nthe IEC 61851 was detected\n"):
 					fire_event(PROTOCOL_DETECT, IEC61851_DETECTED);
 					////condition = //////////////// ;
 				}
-				else if(/* Manual charging*/)
+				else if(signal == MANUAL_CHARGING)
 				{
 					printf("\n no protocol detected will need to move towards manual charging\n");
 					fire_event(PROTOCOL_DETECT, MANUAL_CHARGING);					
