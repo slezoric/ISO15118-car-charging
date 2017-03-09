@@ -1,0 +1,19 @@
+buff = receivee(client_fd,&code,&value); // -----> the calling function
+			//num=recv(client_fd,buff,100,MSG_DONTWAIT); // -------> directly recieving data
+	
+			if (num>0)
+			{
+				sprintf(buff2,"Why are you sendig me %s", buff);
+                clock_gettime(CLOCK_MONOTONIC_RAW, &start); 
+                sendd(client_fd , buff2); //-----> the signal being send
+			}
+            clock_gettime(CLOCK_MONOTONIC_RAW, &end); 
+			t_diff = timespec_diff(end, start);
+			printf("Difference %d\n",t_diff);
+			if (t_diff % 5==0)
+            {
+				sprintf(buff2,"You fool forgot to send something");
+                sendd(client_fd , buff2); //-----> the signal being send
+            } 
+            fprintf(stdout,"Running....\n");
+		
