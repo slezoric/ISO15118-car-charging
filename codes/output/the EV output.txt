@@ -1,0 +1,164 @@
++++ level on CP: standby, 1900.196000 +++
+
+
+ Verbindung nicht hergestellt root@EVAChargeSE:~/EV# ./EV 
++++ level on CP: standby, 11.890000 +++
+
++++ change level on CP for state B: EV detected, 11.890000 +++
+
++++ Start application handshake protocol example +++
+
+EV side: setup data for the supported application handshake request message
+EV side: send message to the EVSE
+send stream... ...sent 
+receive stream......received stream 
+EV side: received message from the EVSE 
+EV side: Response of the EVSE 
+		ResponseCode=OK_SuccessfulNegotiation
+		SchemaID=1
++++ Terminate application handshake protocol example +++
+
+choose between AC-Charging[1], DC-Chargiung[2] or exit [3]:  1
+
++++ Start V2G client / service example for AC charging +++
+
+EV side: call EVSE sessionSetup
+send stream... ...sent 
+receive stream......received stream 
+EV side: received response message from EVSE
+	Header SessionID=1 2 3 4 5 6 7 8 
+	ResponseCode=0
+	EVSEID=20
+	EVSETimeStamp=123456789
+EV side: call EVSE serviceDiscovery
+send stream... ...sent 
+receive stream......received stream 
+EV side: received response message from EVSE
+	Header SessionID=1 2 3 4 5 6 7 8 
+	 ResponseCode=0
+	 ServiceID=1
+	 ServiceName=AC_DC
+	 PaymentOption=Contract_paymentOptionType
+	 ChargeService.FreeService=True
+	 EnergyTransferMode=AC_single_DC_core
+	 EnergyTransferMode=AC_single_phase_core_EnergyTransferModeType
+	 Value added service list:
+
+		 ServiceID=22
+		 ServiceName=WWW
+		 ServiceCategory=Internet
+		 FreeService=True
+
+		 ServiceID=33
+		 ServiceName=HTTPS
+		 ServiceCategory=Internet
+EV side: call EVSE ServiceDetail 
+send stream... ...sent 
+receive stream......received stream 
+EV side: received response message from EVSE
+	Header SessionID=1 2 3 4 5 6 7 8 
+	 ResponseCode=0
+	 ServiceID=1234
+		Length=2
+		ServiceSetID=1
+		Parameters=2
+			 1: ParameterName=Protocol
+			 1: IntValue=15119
+			 2: ParameterName=Name
+		ServiceSetID=2
+		Parameters=1
+			 1: ParameterName=Channel
+			 1: PhysicalValue=1234 (0)
+EV side: call EVSE ServicePaymentSelection 
+send stream... ...sent 
+receive stream......received stream 
+EV side: received response message from EVSE
+	Header SessionID=1 2 3 4 5 6 7 8 
+	 ResponseCode=0
+EV side: call EVSE PaymentDetails 
+send stream... ...sent 
+receive stream......received stream 
+EV side: received response message from EVSE
+	Header SessionID=1 2 3 4 5 6 7 8 
+	 ResponseCode=0
+	EVSETimeStamp=123456
+	GenChallenge=1
+EV side: call EVSE Authorization 
+send stream... ...sent 
+receive stream......received stream 
+EV side: received response message from EVSE
+	Header SessionID=1 2 3 4 5 6 7 8 
+	 ResponseCode=0
+	 EVSEProcessing=Finished
++++ change level on CP for state C: EV connected, ready, 6.960000 +++
+
+EV side: call EVSE chargeParameterDiscovery
+send stream... ...sent 
+receive stream......received stream 
+EV side: received response message from EVSE
+	Header SessionID=1 2 3 4 5 6 7 8 
+	 ResponseCode=0
+	EVSEStatus:
+		RCD=1
+		EVSENotification=0
+		NotificationMaxDelay=123
+	 EVSEProcessing=1
+	 EVSEMaxCurrent=100
+	 EVSENominalVoltage=300
+EV side: call EVSE powerDelivery 
+send stream... ...sent 
+receive stream......received stream 
+EV side: received response message from EVSE
+	Header SessionID=1 2 3 4 5 6 7 8 
+	 ResponseCode=0
+	EVSEStatus:
+		RCD=0
+		EVSENotification=3
+		NotificationMaxDelay=12
+EV side: call EVSE chargingStatus 
+send stream... ...sent 
+receive stream......received stream 
+EV side: received response message from EVSE
+	Header SessionID=1 2 3 4 5 6 7 8 
+	 ResponseCode=0
+	EVSEStatus:
+		RCD=1
+		EVSENotification=0
+		NotificationMaxDelay=123
+	ReceiptRequired=1
+	EVSEID=12
+	SAScheduleTupleID=10
+	EVSEMaxCurrent=400 (3 2)
+	isused.MeterInfo=1
+		MeterInfo.MeterID=2
+		MeterInfo.MeterReading.Value=5000
+		MeterInfo.MeterStatus=4321
+		MeterInfo.TMeter=123456789
+		MeterInfo.SigMeterReading.data=123
+EV side: call EVSE meteringReceipt 
+send stream... ...sent 
+receive stream......received stream 
+EV side: received response message from EVSE
+	Header SessionID=1 2 3 4 5 6 7 8 
+	 ResponseCode=0
+EV side: call EVSE powerDelivery 
+send stream... ...sent 
+receive stream......received stream 
+EV side: received response message from EVSE
+	Header SessionID=1 2 3 4 5 6 7 8 
+	 ResponseCode=0
+	EVSEStatus:
+		RCD=0
+		EVSENotification=3
+		NotificationMaxDelay=12
++++ change level on CP for state B: EV detected, 8.816000 +++
+
+EV side: call EVSE stopSession 
+send stream... ...sent 
+receive stream......received stream 
+EV side: received response message from EVSE
+	Header SessionID=1 2 3 4 5 6 7 8 
+	 ResponseCode=0
+
++++Terminate V2G Client / Service example for AC charging +++
+

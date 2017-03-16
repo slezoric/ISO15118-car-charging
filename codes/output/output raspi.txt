@@ -1,0 +1,70 @@
+Server got connection from client 192.168.37.251
+ Please choose the language to be selected 
+ 1. English 	 2. German 
+ your option please : 
+1
+
+Server:Msg being sent: :5
+ 
+ please insert the plug into the system 
+Len: 1
+Server:Msg Received 
+
+
+the car has been detected 
+ the cable has been connected and the car has been detected
+the cable has been locked
+ the vehicle status is :
+ the protocol has been detected . Now initiating the information and account details process
+
+initialize the payment procedure with the sign in detailsLen: 1
+Server:Msg Received 
+
+Len: 1
+Server:Msg Received 3
+Len: 1
+Server:Msg Received 
+
+ the payment and the initial requirement has been done
+ 
+Authorize the charging station to start the charging processServer:Msg being sent: :22
+ 
+ the car is ready for charging.
+
+ please press the button to charge the vehicle
+
+the charging status of the car with all necessary detailsLen: 1
+Server:Msg Received  
+
+the car charging should be stopped immediatelyServer:Msg being sent: :33
+
+the car has stopped charging
+the payment details are as follows:
+the receipt of the power and duration the vehicle has been chargedLen: 1
+Server:Msg Received $
+
+The payment will be processed now 
+ the payment based on the meter receipt in initiated 
+ Len: 10
+Server:Msg Received )k���*��8�
+ 
+ the payment will be assesed for completion and will proceed to next stage 
+ 
+ The payment was sucessful and the sucessful display is displayed 
+Server:Msg being sent: :42
+
+ the cable will be unlocked now 
+ the car is being unlockedLen: 1
+Server:Msg Received -
+
+charging has been completed
+ the charging process has been completed 
+ Thankyou please use me again
+
+
+
+++++++++++++++++++++++++++++++++++++
+ Please choose the language to be selected 
+ 1. English 	 2. German 
+ your option please : 
+
